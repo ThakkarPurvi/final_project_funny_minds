@@ -2,15 +2,18 @@ version: "3.8"
 services:
   frontend:
     build: ./frontend
-    image: todo-app-frontend:latest
-    container_name: todo-app-frontend
+    image: ${DOCKER_HUB_CREDS_USR}/final_project_young_minds-frontend:latest
+    container_name: final_project_young_minds-frontend
     ports:
     - target: 5000
       published: 80
   backend:
     build: ./backend
-    image: todo-app-backend:latest
-    container_name: todo-app-backend
+    image: ${DOCKER_HUB_CREDS_USR}/final_project_young_minds-backend:latest
+    container_name: final_project_young_minds_backend
     environment:
       DATABASE_URI:
       CREATE_SCHEMA:
+    ports:
+    - target: 5000
+      published: 5000

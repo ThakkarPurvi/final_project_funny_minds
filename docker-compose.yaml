@@ -3,7 +3,7 @@ services:
   frontend:
     build: ./frontend
     image: ${DOCKER_HUB_CREDS_USR}/final_project_young_minds-frontend:latest
-    container_name: final_project_young_minds-frontend
+    container_name: final_project_young_minds_frontend
     ports:
     - target: 5000
       published: 80

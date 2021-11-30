@@ -3,61 +3,61 @@ from application.forms import TaskForm
 from flask import render_template, request, redirect, url_for, jsonify
 import requests
 
-backend_host = "todo-app_backend:5000"
+backend_host = "young_minds_backend:5000"
 
 @app.route('/')
 @app.route('/home')
 def home():
-    all_tasks = requests.get(f"http://{backend_host}/read/allTasks").json()
-    app.logger.info(f"Tasks: {all_tasks}")
-    return render_template('index.html', title="Home", all_tasks=all_tasks["tasks"])
+    all_jokes = requests.get(f"http://{backend_host}/read/alljokes").json()
+    app.logger.info(f"jokes: {all_jokes}")
+    return render_template('index.html', title="Home", all_jokes=all_jokes["jokes"])
 
-@app.route('/create/task', methods=['GET','POST'])
-def create_task():
+@app.route('/create/joke', methods=['GET','POST'])
+def create_joke():
     form = TaskForm()
 
     if request.method == "POST":
         response = requests.post(
-            f"http://{backend_host}/create/task",
+            f"http://{backend_host}/create/joke",
             json={"description": form.description.data}
         )
         app.logger.info(f"Response: {response.text}")
         return redirect(url_for('home'))
 
-    return render_template("create_task.html", title="Add a new Task", form=form)
+    return render_template("create_joke.html", title="Share a new joke", form=form)
 
-@app.route('/update/task/<int:id>', methods=['GET','POST'])
-def update_task(id):
+@app.route('/update/joke/<int:id>', methods=['GET','POST'])
+def update_joke(id):
     form = TaskForm()
-    task = requests.get(f"http://{backend_host}/read/task/{id}").json()
-    app.logger.info(f"Task: {task}")
+    joke = requests.get(f"http://{backend_host}/read/joke/{id}").json()
+    app.logger.info(f"joke: {joke}")
 
     if request.method == "POST":
         response = requests.put(
-        f"http://{backend_host}/update/task/{id}",
+        f"http://{backend_host}/update/joke/{id}",
         json={"description": form.description.data}
         )
         return redirect(url_for('home'))
 
-    return render_template('update_task.html', task=task, form=form)
+    return render_template('update_joke.html', joke=joke, form=form)
 
-@app.route('/delete/task/<int:id>')
-def delete_task(id):
+@app.route('/delete/joke/<int:id>')
+def delete_joke(id):
     response = requests.delete(
-        f"http://{backend_host}/delete/task/{id}"
+        f"http://{backend_host}/delete/joke/{id}"
         )
     return redirect(url_for('home'))
 
-@app.route('/complete/task/<int:id>')
-def complete_task(id):
+@app.route('/complete/joke/<int:id>')
+def complete_joke(id):
     response = requests.put(
-        f"http://{backend_host}/complete/task/{id}"
+        f"http://{backend_host}/complete/joke/{id}"
         )
     return redirect(url_for('home'))
 
-@app.route('/incomplete/task/<int:id>')
-def incomplete_task(id):
+@app.route('/incomplete/joke/<int:id>')
+def incomplete_joke(id):
     response = requests.put(
-    f"http://{backend_host}/incomplete/task/{id}"
+    f"http://{backend_host}/incomplete/joke/{id}"
     )
     return redirect(url_for('home'))

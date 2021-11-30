@@ -1,28 +1,30 @@
 {% extends "layout.html" %}
 {% block body %}
 
-    <h2>Incomplete Tasks</h2>
-    {% for task in all_tasks %}
-    {% if task["completed"] == False %}
+    <h2>Young_Mind</h2>
+    {% for Young_Mind in all_Young_Minds %}
+    {% if Young_Mind["completed"] == False %}
         <p>
-            Task ID: {{ task["id"] }}<br>
-            Task Description: {{ task["description"] }}<br>
-            <a href="{{ url_for('update_task', id=task.id) }}">Edit</a>
-            <a href="{{ url_for('delete_task', id=task.id) }}">Delete</a>
-            <a href="{{ url_for('complete_task', id=task.id) }}">Complete</a>
+            Young_Mind ID: {{ Young_Mind["id"] }}<br>
+            Young_Mind Description: {{ Young_Mind["description"] }}<br>
+            <a href="{{ url_for('read_Young_Mind', id=Young_Mind.id) }}">Read</a>
+            <a href="{{ url_for('create_Young_Mind', id=Young_Mind.id) }}">Create</a>
+            <a href="{{ url_for('update_Young_Mind', id=Young_Mind.id) }}">Update</a>
+            <a href="{{ url_for('delete_Young_Mind', id=Young_Mind.id) }}">Delete</a>
         </p>    
     {% endif %}
-    {% endfor %}
+    {% endfor %}    
     
-    <h2>Completed Tasks</h2>
-    {% for task in all_tasks %}
-    {% if task["completed"] == True %}
+    <h2>Jokes</h2>
+    {% for joke in all_jokes %}
+    {% if joke["completed"] == False %}
         <p>
-            Task ID: {{ task["id"] }}<br>
-            Task Description: {{ task["description"] }}<br>
-            <a href="{{ url_for('update_task', id=task.id) }}">Edit</a>
-            <a href="{{ url_for('delete_task', id=task.id) }}">Delete</a>
-            <a href="{{ url_for('incomplete_task', id=task.id) }}">Incomplete</a>
+            joke ID: {{ joke["id"] }}<br>
+            joke Description: {{ joke["description"] }}<br>
+            <a href="{{ url_for('create_joke', id=joke) }}">Create</a>
+            <a href="{{ url_for('update_joke', id=joke.id) }}">Update</a>
+            <a href="{{ url_for('update_joke', id=joke.id) }}">Update</a>
+            <a href="{{ url_for('delete_joke', id=joke.id) }}">Delete</a>
         </p>    
     {% endif %}
     {% endfor %}

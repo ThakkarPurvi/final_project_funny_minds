@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block body %}
+<p>
+    <b>Current description:</b> {{ task.description }}
+</p>
+
+<div class='joke'>
+    <joke method='POST' action=''>
+        {{ joke.hidden_tag() }}
+        {{ joke.description.label }} {{ joke.description }}<br>
+        {{ joke.submit }}<br>
+    </joke>
+</div>
+{% endblock %}

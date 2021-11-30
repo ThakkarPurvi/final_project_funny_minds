@@ -62,7 +62,6 @@ def read_jokes():
         jokes_dict["jokes"].append(
             {
                 "id": joke.id,
-                "joke_category": 
                 "description": joke.description,
                 "completed": joke.completed
             }

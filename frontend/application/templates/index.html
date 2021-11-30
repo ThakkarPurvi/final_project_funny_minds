@@ -31,42 +31,40 @@
 
 {% endblock body %}
 
-from app import db, Countries, Cities
+from app import db, categories, jokes
 
 db.drop_all()
 db.create_all() # Creates all table classes defined
 
-countries = [
-    "United Kingdom",
-    "France",
-    "South Korea",
-    "Ireland",
-    "Japan",
-    "Nigeria"
+categories = [
+    "Knock-Knock",
+    "Summer Jokes",
+    "Sports Jokes",
+    "Festive Jokes",
+    "Birthday Jokes",
+    "Winter Jokes",
+    "Santa Jokes",
+    "Others"
 ]
 
-for country in countries:
-    new_country = Countries(name = country)
-    db.session.add(new_country)
-    db.session.commit()
-    
-cities = [
-    ("London", "United Kingdom"),
-    ("Manchester", "United Kingdom"),
-    ("Tokyo", "Japan"),
-    ("Dublin", "Ireland")
+for category in categories:
+    new_category = categories(name = category)
+    db.session.add(new_category)
+    db.session.commit() 
+
+jokes = [
 ]
 
-for city in cities:
-    new_city = Cities(name = city[0], country = Countries.query.filter_by(name=city[1]).first())
-    db.session.add(new_city)
+for joke in jokes:
+    new_joke = jokes(name = joke[0], category = categories.query.filter_by(name=joke[1]).first())
+    db.session.add(new_joke)
     db.session.commit()
 
-all_countries = Countries.query.all()
+all_categories = categories.query.all()
 
-for country in all_countries:
-    print(f"Country name: {country.name}")
-    print(f"Cities in {country.name}:")
-    for city in country.cities:
-        print(f"- {city.name}")
+for category in all_categories:
+    print(f"category name: {category.name}")
+    print(f"jokes in {category.name}:")
+    for joke in category.jokes:
+        print(f"- {joke.name}")
     print()

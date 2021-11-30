@@ -7,10 +7,10 @@ from flask import render_template, request, redirect, url_for, Response, jsonify
 @app.route('/create/Young_Mind', methods=['GET','POST'])
 def create_Young_Mind():
         package = request.json
-        new_Young_Mind = young_minds_backend(description=package["description"])
+        new_Young_Mind = Young_Minds(name=package["name"], country=package["country"], dob=package["dob"])
         db.session.add(new_Young_Mind)
         db.session.commit()
-        return Response(f"Added Young_Mind: {new_Young_Mind.description}", mimetype='text/plain')
+        return Response(f"Added Young_Mind: {new_Young_Mind.name}incountry{new_Young_Mind.country}dob{new_Young_Mind.dob}", mimetype='text/plain')
 
 #Read Young Minds
 @app.route('/read/Young_Minds', methods=['GET'])

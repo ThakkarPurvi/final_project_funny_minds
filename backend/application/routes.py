@@ -1,6 +1,5 @@
 from application import app, db
-from application.models import jokes, joke_id, joke_Category
-from application.models import young_mind_id, Young_Mind
+from application.models import Jokes, Young_Mind
 from flask import render_template, request, redirect, url_for, Response, jsonify
 
 #Create Young Minds
@@ -39,7 +38,7 @@ def update_Young_Mind(id):
 #Delete Young Minds
 @app.route('/delete/Young_Mind/<int:id>', methods=['DELETE'])
 def delete_Young_Mind(id):
-    Young_Mind = Young_Minds.query.get(id)
+    Young_Mind = Young_Mind.query.get(id)
     db.session.delete(Young_Mind)
     db.session.commit()
     return Response(f"Delete Young_Mind ID: {id}" , mimetype='text/plain')

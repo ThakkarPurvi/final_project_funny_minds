@@ -25,24 +25,6 @@ class TestBase(TestCase):
         db.session.remove()
         db.drop_all()
 
-class TestViews(TestBase):
-    # Test whether we get a successful response from our routes
-    def test_home_get(self):
-        response = self.client.get(url_for('home'))
-        self.assert200(response)
-    
-    def test_create_task_get(self):
-        response = self.client.get(url_for('create_task'))
-        self.assert200(response)
-
-    def test_read_tasks_get(self):
-        response = self.client.get(url_for('read_tasks'))
-        self.assert200(response)
-
-    def test_update_task_get(self):
-        response = self.client.get(url_for('update_task', id=1))
-        self.assert200(response)
-
 class TestRead(TestBase):
 
     def test_read_home_tasks(self):

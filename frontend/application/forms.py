@@ -5,7 +5,7 @@ from flask_wtf import FlaskForm
 class CreateYoung_MindForm(FlaskForm):
     name = StringField('Young_Mind Name', validators=[DataRequired()])
     country = IntegerField('Young_Mind country', validators=[DataRequired()])
-    dob = SelectField('Young_Mind dob', validators=[DataRequired()]
+    dob = SelectField('Young_Mind dob', validators=[DataRequired()])
     submit = SubmitField('Add Young_Mind')
 
 class CreateJokeForm(FlaskForm):

@@ -2,9 +2,8 @@ from application import app
 from application.forms import CreateYoung_MindForm, CreateJokeForm
 from flask import render_template, request, redirect, url_for, jsonify
 import requests
-from os import getenv
 
-backend = getenv("BACKEND_HOSTNAME")
+backend = "final_project_young_minds_backend"
 
 # Read Young_Mind
 @app.route('/', methods=["GET"])

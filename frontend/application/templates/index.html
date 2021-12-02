@@ -1,70 +1,31 @@
 {% extends "layout.html" %}
 {% block body %}
-
-    <h2>Young_Mind</h2>
-    {% for Young_Mind in all_Young_Minds %}
-    {% if Young_Mind["completed"] == False %}
-        <p>
-            Young_Mind ID: {{ Young_Mind["id"] }}<br>
-            Young_Mind Description: {{ Young_Mind["description"] }}<br>
-            <a href="{{ url_for('read_Young_Mind', id=Young_Mind.id) }}">Read</a>
-            <a href="{{ url_for('create_Young_Mind', id=Young_Mind.id) }}">Create</a>
-            <a href="{{ url_for('update_Young_Mind', id=Young_Mind.id) }}">Update</a>
-            <a href="{{ url_for('delete_Young_Mind', id=Young_Mind.id) }}">Delete</a>
-        </p>    
-    {% endif %}
-    {% endfor %}    
+    {% for Young_Mind in Young_Minds %}
+    <table>
+        <h2>{{ Young_Mind["name"] }}</h2>
+        <tr>
+            <td><b>Country</b></td>
+            <td>{{ Young_Mind["country"] }}</td> 
+        </tr>
+        <tr>
+            <td><b>dob</b></td>
+            <td>{{ Young_Mind["dob"] }}</td> 
+        </tr>
+    </table>
     
-    <h2>Jokes</h2>
-    {% for joke in all_jokes %}
-    {% if joke["completed"] == False %}
-        <p>
-            joke ID: {{ joke["id"] }}<br>
-            joke Description: {{ joke["description"] }}<br>
-            <a href="{{ url_for('create_joke', id=joke) }}">Create</a>
-            <a href="{{ url_for('update_joke', id=joke.id) }}">Update</a>
-            <a href="{{ url_for('update_joke', id=joke.id) }}">Update</a>
-            <a href="{{ url_for('delete_joke', id=joke.id) }}">Delete</a>
-        </p>    
-    {% endif %}
+    <h3>Jokes of {{ Young_Mind["name"] }}</h3>
+    <table>
+        <tr>
+            <th>joke_category</th>
+            <th>joke_description</th>
+        </tr>
+        {% for joke in Young_Mind["jokes"] %}
+        <tr>
+            <td>{{ joke["joke_category"] }}</td> 
+            <td>{{ joke["joke_description"] }}</td> 
+        </tr>
+        {% endfor %}
+    </table>
+
     {% endfor %}
-
 {% endblock body %}
-
-from app import db, categories, jokes
-
-db.drop_all()
-db.create_all() # Creates all table classes defined
-
-categories = [
-    "Knock-Knock",
-    "Summer Jokes",
-    "Sports Jokes",
-    "Festive Jokes",
-    "Birthday Jokes",
-    "Winter Jokes",
-    "Santa Jokes",
-    "Others"
-]
-
-for category in categories:
-    new_category = categories(name = category)
-    db.session.add(new_category)
-    db.session.commit() 
-
-jokes = [
-]
-
-for joke in jokes:
-    new_joke = jokes(name = joke[0], category = categories.query.filter_by(name=joke[1]).first())
-    db.session.add(new_joke)
-    db.session.commit()
-
-all_categories = categories.query.all()
-
-for category in all_categories:
-    print(f"category name: {category.name}")
-    print(f"jokes in {category.name}:")
-    for joke in category.jokes:
-        print(f"- {joke.name}")
-    print()

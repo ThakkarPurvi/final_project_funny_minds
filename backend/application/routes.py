@@ -1,101 +1,115 @@
 from application import app, db
-from application.models import Jokes, Young_Mind
-from flask import render_template, request, redirect, url_for, Response, jsonify
+from application.models import Young_Mind, Jokes
+from flask import request, Response, jsonify
+from os import getenv
 
 #Create Young Minds
-@app.route('/create/Young_Mind', methods=['GET','POST'])
+@app.route('/create/Young_Mind', methods=["POST"])
 def create_Young_Mind():
-        package = request.json
-        new_Young_Mind = Young_Mind(name=package["name"], country=package["country"], dob=package["dob"])
-        db.session.add(new_Young_Mind)
-        db.session.commit()
-        return Response(f"Added Young_Mind: {new_Young_Mind.name}to{new_Young_Mind.country}born on{new_Young_Mind.dob}", mimetype='text/plain')
+    json = request.json
+    new_Young_Mind = Young_Mind(
+        name = json["name"],
+        country = json["country"],
+        dob = json["dob"]
+    )
+    db.session.add(new_Young_Mind)
+    db.session.commit()
+    return f"Young_Mind '{new_Young_Mind.name}' added to database"
 
-#Read Young Minds
-@app.route('/read/Young_Mind', methods=['GET'])
-def read_Young_Mind():
+#Create Joke
+@app.route('/create/joke/<int:planet_id>', methods=["POST"])
+def create_joke(young_mind_id):
+    json = request.json
+    new_joke = Joke(
+        joke_category = json["joke_category"],
+        young_mind_id = young_mind_id,
+        joke_description = json["joke_description"]
+    )
+    db.session.add(new_joke)
+    db.session.commit()
+    return f"Joke '{new_joke.name}' added to database"
+
+#Get all Young Minds
+@app.route('/get/allYoung_Mind', methods=["GET"])
+def get_all_Young_Mind():
     all_Young_Mind = Young_Mind.query.all()
-    Young_Mind_dict = {"Young_Minds": []}
-    for Young_Mind in all_Young_Mind:
-        Young_Mind_dict["Young_Mind"].append(
+    json = {"Young_Minds": []}
+    for Young_Mind in all_Young_Minds:
+        jokes = []
+        for joke in Young_Mind.jokes:
+            jokes.append(
+                {
+                    "id": joke.id,
+                    "joke_category": joke.joke_category,
+                    "young_mind_id": joke.young_mind_id,
+                    "joke_description": joke.joke_description
+                }
+            )
+        json["Young_Minds"].append(
             {
-                "id": Young_Mind.id, 
-                "description": Young_Mind.description,
-                "completed": Young_Mind.completed
+                "id": Young_Mind.id,
+                "name": Young_Mind.name,
+                "country": Young_Mind.country,
+                "dob": Young_Mind.dob,
+                "jokes": jokes
             }
         )
-    return jsonify(Young_Mind_dict)
+    return jsonify(json)
 
-# #Update Young Minds
-# @app.route('/update/Young_Mind/<int:id>', methods=['PUT'])
-# def update_Young_Mind(id):
-#     package = request.json
-#     Young_Mind = Young_Mind.query.get(id)
-#     Young_Mind.description = package["description"]
-#     db.session.commit()
-#     return Response(f"Updated Young_Mind (ID: {id}) with description: {Young_Mind.description}", mimetype='text/plain')
+@app.route('/get/allJokes', methods=["GET"])
+def get_all_jokes():
+    all_jokes = Young_Mind.query.all()
+    json = {"jokes": []}
+    for joke in all_jokes:
+        json["jokes"].append(
+            {
+                "id": joke.id,
+                "joke_category": joke.joke_category,
+                "young_mind_id": joke.young_mind_id,
+                "joke_description": joke.joke_description
+            }
+        )
+    return jsonify(json)
 
-# #Delete Young Minds
-# @app.route('/delete/Young_Mind/<int:id>', methods=['DELETE'])
-# def delete_Young_Mind(id):
-#     Young_Mind = Young_Mind.query.get(id)
-#     db.session.delete(Young_Mind)
-#     db.session.commit()
-#     return Response(f"Delete Young_Mind ID: {id}" , mimetype='text/plain')
+@app.route('/get/Young_Mind/<int:id>', methods=["GET"])
+def get_Young_Mind(id):
+    Young_Mind = Young_Mind.query.get(id)
+    return jsonify(
+        {
+            "id": Young_Mind.id,
+            "name": Young_Mind.name,
+            "country": Young_Mind.country,
+            "dob": Young_Mind.dob
+        }
+    )
 
-# #Create Joke
-# @app.route('/create/joke', methods=['GET','POST'])
-# def create_joke():
-#         package = request.json
-#         new_joke = jokes(description=package["description"])
-#         db.session.add(new_joke)
-#         db.session.commit()
-#         return Response(f"Added joke with description: {new_joke.description}", mimetype='text/plain')
+@app.route('/get/Young_Mind/<int:id>/jokes', methods=["GET"])
+def get_jokes(id):
+    jokes = Young_Mind.query.get(id).jokes
+    json = {"jokes": []}
+    for joke in jokes:
+        json["jokes"].append(
+            {
+                "id": joke.id,
+                "joke_category": joke.joke_category,
+                "young_mind_id": joke.young_mind_id,
+                "joke_description": joke.joke_description
+            }
+        )
+    return jsonify(json)
 
-# #Read Joke
-# @app.route('/read/alljokes', methods=['GET'])
-# def read_jokes():
-#     all_jokes = jokes.query.all()
-#     jokes_dict = {"jokes": []}
-#     for joke in all_jokes:
-#         jokes_dict["jokes"].append( 
-#             {
-#                 "id": joke.id,
-#                 "description": joke.description,
-#                 "completed": joke.completed
-#             }
-#         )
-#     return jsonify(jokes_dict)
+@app.route('/update/young_mind/<int:id>', methods=["PUT"])
+def update_young_mind(id):
+    data = request.json
+    young_mind = young_mind.query.get(id)
+    Young_Mind.name = data["name"]
+    Young_Mind.country = data["country"]
+    Young_Mind.dob = data["dob"]
+    db.session.commit()
+    return f"Young_Mind '{Young_Mind.name}' updated successfully"
 
-# #Update Joke
-# @app.route('/update/joke/<int:id>', methods=['PUT'])
-# def update_joke(id):
-#     package = request.json
-#     joke = jokes.query.get(id)
-#     joke.description = package["description"]
-#     db.session.commit()
-#     return Response(f"Updated joke (ID: {id}) with description: {joke.description}", mimetype='text/plain')
-
-# #Delete Joke
-# @app.route('/delete/joke/<int:id>', methods=['DELETE'])
-# def delete_joke(id):
-#     joke = jokes.query.get(id)
-#     db.session.delete(joke)
-#     db.session.commit()
-#     return Response(f"Delete joke ID: {id}" , mimetype='text/plain')
-
-# #Complete Joke
-# @app.route('/complete/joke/<int:id>', methods=['PUT'])
-# def complete_joke(id):
-#     joke = jokes.query.get(id)
-#     joke.completed = True
-#     db.session.commit()
-#     return Response(f"joke with ID: {id} set to completed = True", mimetype='text/plain')
-
-# #InComplete Joke
-# @app.route('/incomplete/joke/<int:id>', methods=['PUT'])
-# def incomplete_joke(id):
-#     joke = jokes.query.get(id)
-#     joke.completed = False
-#     db.session.commit()
-#     return Response(f"joke with ID: {id} set to completed = False", mimetype='text/plain')
+@app.route('/delete/Young_Mind/<int:id>', methods=["DELETE"])
+def delete_Young_Mind(id):
+    Young_Mind = Young_Mind.query.get(id)
+    db.session.delete(Young_Mind)
+    return f"Young_Mind '{Young_Mind.name}' deleted successfully"

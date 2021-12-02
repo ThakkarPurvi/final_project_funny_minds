@@ -1,5 +1,5 @@
 from application import app, db
-from application.models import Young_Mind, Jokes
+from application.models import Young_Mind, Joke
 from flask import request, Response, jsonify
 from os import getenv
 

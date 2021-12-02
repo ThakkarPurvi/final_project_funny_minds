@@ -5,11 +5,11 @@ from flask_wtf import FlaskForm
 class CreateYoung_MindForm(FlaskForm):
     name = StringField('Young_Mind Name', validators=[DataRequired()])
     country = IntegerField('Young_Mind country', validators=[DataRequired()])
-    dob = SelectField('Young_Mind dob', validators=[DataRequired()],
+    dob = SelectField('Young_Mind dob', validators=[DataRequired()]
     submit = SubmitField('Add Young_Mind')
 
 class CreateJokeForm(FlaskForm):
-    joke_category = StringField('Joke joke_category', validators=[DataRequired()])
+    joke_category = StringField('Joke joke_category', validators=[DataRequired()],
         choices=[
             ("Knock-Knock", "Knock-Knock"),
             ("Summer Jokes", "Summer Jokes"),
@@ -17,7 +17,7 @@ class CreateJokeForm(FlaskForm):
             ("Festive Jokes", "Festive Jokes"),
             ("Birthday Jokes", "Birthday Jokes"),
             ("Santa Jokes", "Santa Jokes"),
-            ("Others", "Others"),
+            ("Others", "Others")
         ]
     )
     joke_description = IntegerField('Joke joke_description', validators=[DataRequired()])

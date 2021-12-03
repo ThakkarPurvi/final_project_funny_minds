@@ -1,12 +1,12 @@
-from wtforms import StringField, IntegerField, SelectField, SubmitField
+from wtforms import StringField, IntegerField, SelectField, SubmitField, DateField
 from wtforms.validators import DataRequired
 from flask_wtf import FlaskForm
 
-class CreateYoung_MindForm(FlaskForm):
-    name = StringField('Young_Mind Name', validators=[DataRequired()])
-    country = IntegerField('Young_Mind country', validators=[DataRequired()])
-    dob = SelectField('Young_Mind dob', validators=[DataRequired()])
-    submit = SubmitField('Add Young_Mind')
+class CreateYoungMindForm(FlaskForm):
+    name = StringField('YoungMind Name', validators=[DataRequired()])
+    country = IntegerField('YoungMind country', validators=[DataRequired()])
+    dob = DateField('YoungMind dob', validators=[DataRequired()])
+    submit = SubmitField('Add YoungMind')
 
 class CreateJokeForm(FlaskForm):
     joke_category = StringField('Joke joke_category', validators=[DataRequired()],
@@ -21,5 +21,5 @@ class CreateJokeForm(FlaskForm):
         ]
     )
     joke_description = IntegerField('Joke joke_description', validators=[DataRequired()])
-    Young_Mind = SelectField('Creating Young_Mind', validators=[DataRequired()], choices=[])
+    youngmind = SelectField('Creating YoungMind', validators=[DataRequired()], choices=[])
     submit = SubmitField('Add Joke')

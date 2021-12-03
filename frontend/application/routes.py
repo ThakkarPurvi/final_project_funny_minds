@@ -1,24 +1,24 @@
 from application import app
-from application.forms import CreateYoung_MindForm, CreateJokeForm
+from application.forms import CreateYoungMindForm, CreateJokeForm
 from flask import render_template, request, redirect, url_for, jsonify
 import requests
 
-backend = "final_project_young_minds_backend"
+backend_host = "final_project_young_minds_backend:5000"
 
-# Read Young_Mind
+# Read YoungMind
 @app.route('/', methods=["GET"])
 def home():
-    all_Young_Mind = requests.get(f"http://{backend}/ret/allYoung_Minds").json()["Young_Mind"]
-    return render_template('index.html', title="Home", Young_Minds=Young_Minds)
+    all_youngmind = requests.get(f"http://{backend_host}/read/allYoungMind").json()["YoungMind"]
+    return render_template('index.html', title="Home", all_youngmind=all_youngmind)
 
 # Create Jokes
-@app.route('/create/Young_Mind', methods=["GET","POST"])
-def create_Young_Mind():
-    form = CreateYoung_MindForm()
+@app.route('/create/YoungMind', methods=["GET","POST"])
+def create_YoungMind():
+    form = CreateYoungMindForm()
 
     if request.method == "POST":
         response = requests.post(
-            f"http://{backend}/create/Young_Mind",
+            f"http://{backend_host}/create/YoungMind",
             json={
                 "name": form.name.data,
                 "country": form.country.data,
@@ -28,22 +28,22 @@ def create_Young_Mind():
         app.logger.info(f"Response: {response.text}")
         return redirect(url_for("home"))
 
-    return render_template("create_Young_Mind.html", title="Add a new Young_Mind", form=form)
+    return render_template("create_YoungMind.html", title="Add a new YoungMind", form=form)
 
 @app.route('/create/joke', methods=["GET","POST"])
 def create_joke():
-    form = CreateYoung_MindForm()
+    form = CreateYoungMindForm()
 
-    json = requests.get(f"http://{backend}/get/allYoung_Minds").json()
-    for Young_Mind in json["Young_Minds"]:
-        form.Young_Mind.choices.append((Young_Mind["id"], Young_Mind["name"], Young_Mind["country"], Young_Mind["dob"]))
+    json = requests.get(f"http://{backend_host}/get/allYoungMind").json()
+    for youngmind in json["youngminds"]:
+        form.youngmind.choices.append((youngmind["id"], youngmind["name"]))
 
     if request.method == "POST":
         response = requests.post(
-            f"http://{backend}/create/joke/{form.Young_Mind.data}",
+            f"http://{backend_host}/create/joke/{form.youngmind.data}",
             json={
                 "joke_category": form.joke_category.data,
-                "young_mind_id": form.young_mind_id.data,
+                "youngmind_id": form.youngmind_id.data,
                 "joke_description": form.joke_description.data
             }
         )
@@ -51,90 +51,3 @@ def create_joke():
         return redirect(url_for("home"))
 
     return render_template("create_joke.html", title="Add Joke", form=form)
-
-# Update Jokes
-# # @app.route('/update/joke/<int:id>', methods=['GET','POST'])
-# # def update_joke(id):
-#     form = TaskForm()
-#     joke = requests.get(f"http://{backend_host}/read/joke/{id}").json()
-#     app.logger.info(f"joke: {joke}")
-
-#     if request.method == "POST":
-#         response = requests.put(
-#         f"http://{backend_host}/update/joke/{id}",
-#         json={"description": form.description.data}
-#         )
-#         return redirect(url_for('home'))
-
-#     return render_template('update_joke.html', joke=joke, form=form)
-
-# # Delete Jokes
-# @app.route('/delete/joke/<int:id>')
-# def delete_joke(id):
-#     response = requests.delete(
-#         f"http://{backend_host}/delete/joke/{id}"
-#         )
-#     return redirect(url_for('home'))
-
-# # Read Jokes # Read Jokes # Read Jokes # Read Jokes # Read Jokes
-# @app.route('/')
-# @app.route('/home')
-# def home():
-#     all_jokes = requests.get(f"http://{backend_host}/read/alljokes").json()
-#     app.logger.info(f"jokes: {all_jokes}")
-#     return render_template('index.html', title="Home", all_jokes=all_jokes["jokes"])
-
-# # Create Jokes
-# @app.route('/create/joke', methods=['GET','POST'])
-# def create_joke():
-#     form = TaskForm()
-
-#     if request.method == "POST":
-#         response = requests.post(
-#             f"http://{backend_host}/create/joke",
-#             json={"description": form.description.data}
-#         )
-#         app.logger.info(f"Response: {response.text}")
-#         return redirect(url_for('home'))
-
-#     return render_template("create_joke.html", title="Share a new joke", form=form)
-
-# # Update Jokes
-# @app.route('/update/joke/<int:id>', methods=['GET','POST'])
-# def update_joke(id):
-#     form = TaskForm()
-#     joke = requests.get(f"http://{backend_host}/read/joke/{id}").json()
-#     app.logger.info(f"joke: {joke}")
-
-#     if request.method == "POST":
-#         response = requests.put(
-#         f"http://{backend_host}/update/joke/{id}",
-#         json={"description": form.description.data}
-#         )
-#         return redirect(url_for('home'))
-
-#     return render_template('update_joke.html', joke=joke, form=form)
-
-# # Delete Jokes
-# @app.route('/delete/joke/<int:id>')
-# def delete_joke(id):
-#     response = requests.delete(
-#         f"http://{backend_host}/delete/joke/{id}"
-#         )
-#     return redirect(url_for('home'))
-
-# # Complete Jokes
-# @app.route('/complete/joke/<int:id>')
-# def complete_joke(id):
-#     response = requests.put(
-#         f"http://{backend_host}/complete/joke/{id}"
-#         )
-#     return redirect(url_for('home'))
-
-# # InComplete Jokes
-# @app.route('/incomplete/joke/<int:id>')
-# def incomplete_joke(id):
-#     response = requests.put(
-#     f"http://{backend_host}/incomplete/joke/{id}"
-#     )
-#     return redirect(url_for('home'))

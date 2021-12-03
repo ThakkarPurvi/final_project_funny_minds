@@ -1,25 +1,25 @@
 {% extends "layout.html" %}
 {% block body %}
-    {% for Young_Mind in Young_Minds %}
+    {% for YoungMind in all_YoungMind %}
     <table>
-        <h2>{{ Young_Mind["name"] }}</h2>
+        <h2>{{ YoungMind["name"] }}</h2>
         <tr>
             <td><b>Country</b></td>
-            <td>{{ Young_Mind["country"] }}</td> 
+            <td>{{ YoungMind["country"] }}</td> 
         </tr>
         <tr>
             <td><b>dob</b></td>
-            <td>{{ Young_Mind["dob"] }}</td> 
+            <td>{{ YoungMind["dob"] }}</td> 
         </tr>
     </table>
     
-    <h3>Jokes of {{ Young_Mind["name"] }}</h3>
+    <h3>Jokes of {{ YoungMind["name"] }}</h3>
     <table>
         <tr>
             <th>joke_category</th>
             <th>joke_description</th>
         </tr>
-        {% for joke in Young_Mind["jokes"] %}
+        {% for joke in YoungMind["jokes"] %}
         <tr>
             <td>{{ joke["joke_category"] }}</td> 
             <td>{{ joke["joke_description"] }}</td> 

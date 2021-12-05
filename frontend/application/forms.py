@@ -3,13 +3,12 @@ from wtforms.validators import DataRequired
 from flask_wtf import FlaskForm
 
 class CreateYoungMindForm(FlaskForm):
-    name = StringField('YoungMind Name', validators=[DataRequired()])
-    country = IntegerField('YoungMind country', validators=[DataRequired()])
-    dob = DateField('YoungMind dob', validators=[DataRequired()])
-    submit = SubmitField('Add YoungMind')
+    name = StringField('Type your Name', validators=[DataRequired()])
+
+    submit = SubmitField('Submit your name to share your Joke')
 
 class CreateJokeForm(FlaskForm):
-    joke_category = StringField('Joke joke_category', validators=[DataRequired()],
+    joke_category = SelectField('Select Joke Category', validators=[DataRequired()],
         choices=[
             ("Knock-Knock", "Knock-Knock"),
             ("Summer Jokes", "Summer Jokes"),
@@ -20,6 +19,7 @@ class CreateJokeForm(FlaskForm):
             ("Others", "Others")
         ]
     )
-    joke_description = IntegerField('Joke joke_description', validators=[DataRequired()])
-    youngmind = SelectField('Creating YoungMind', validators=[DataRequired()], choices=[])
-    submit = SubmitField('Add Joke')
+    joke_description = StringField('Type your Joke', validators=[DataRequired()])
+    youngmind = SelectField('Select your Name', validators=[DataRequired()], choices=[])
+    
+    submit = SubmitField('Submit Joke')

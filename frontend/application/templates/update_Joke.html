@@ -1,0 +1,22 @@
+{% extends "layout.html"%}
+
+{% block body %}
+
+<b>Current Joke: </b> {{ joke.joke_description }}
+<br>
+<hr>
+<hr>
+
+<div class='form'>
+    <form method='POST' action=''>
+        {{ form.hidden_tag() }}
+        {{ form.joke_description.label }} {{ form.joke_description }}
+        {{ form.joke_category.label }} {{ form.joke_category }}
+        {{ form.submit }}
+        <br>
+
+   
+    </form>
+</div>
+
+{% endblock body %}

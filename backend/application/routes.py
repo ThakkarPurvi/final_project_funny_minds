@@ -1,20 +1,18 @@
 from application import app, db
 from application.models import YoungMind, Joke
-from flask import request, Response, jsonify
-from os import getenv
+from flask import request, Response, jsonify, render_template, redirect, url_for
+import os
 
 #Create Young Minds
-@app.route('/create/YoungMind', methods=["POST"])
-def create_YoungMind():
+@app.route('/create/youngmind', methods=["POST"])
+def create_youngmind():
     json = request.json
-    new_YoungMind = YoungMind(
-        name = json["name"],
-        country = json["country"],
-        dob = json["dob"]
+    new_youngmind = YoungMind(
+        name = json["name"]
     )
-    db.session.add(new_YoungMind)
+    db.session.add(new_youngmind)
     db.session.commit()
-    return f"YoungMind '{new_YoungMind.name}' added to database"
+    return f"YoungMind '{new_youngmind.name}' added to database"
 
 #Create Joke
 @app.route('/create/joke/<int:youngmind_id>', methods=["POST"])
@@ -30,11 +28,11 @@ def create_joke(youngmind_id):
     return f"Joke '{new_joke.name}' added to database"
 
 #Get all Young Minds
-@app.route('/read/allYoungMind', methods=["GET"])
-def get_all_YoungMind():
-    all_YoungMind = YoungMind.query.all()
-    json = {"YoungMind": []}
-    for youngmind in all_YoungMind:
+@app.route('/get/allYoungMinds', methods=["GET"])
+def get_all_YoungMinds():
+    all_youngminds = YoungMind.query.all()
+    json = {"youngminds": []}
+    for youngmind in all_youngminds:
         jokes = []
         for joke in youngmind.jokes:
             jokes.append(
@@ -45,12 +43,10 @@ def get_all_YoungMind():
                     "joke_description": joke.joke_description
                 }
             )
-        json["YoungMind"].append(
+        json["youngminds"].append(
             {
                 "id": youngmind.id,
                 "name": youngmind.name,
-                "country": youngmind.country,
-                "dob": youngmind.dob,
                 "jokes": jokes
             }
         )
@@ -72,14 +68,12 @@ def get_all_jokes():
     return jsonify(json)
 
 @app.route('/get/YoungMind/<int:id>', methods=["GET"])
-def get_YoungMind(id):
+def get_youngmind(id):
     youngmind = YoungMind.query.get(id)
     return jsonify(
         {
             "id": youngmind.id,
-            "name": youngmind.name,
-            "country": youngmind.country,
-            "dob": youngmind.dob
+            "name": youngmind.name
         }
     )
 
@@ -98,18 +92,37 @@ def get_jokes(id):
         )
     return jsonify(json)
 
+#Update youngmind
 @app.route('/update/youngmind/<int:id>', methods=["PUT"])
 def update_youngmind(id):
     data = request.json
     youngmind = YoungMind.query.get(id)
     youngmind.name = data["name"]
-    youngmind.country = data["country"]
-    youngmind.dob = data["dob"]
     db.session.commit()
     return f"YoungMind '{youngmind.name}' updated successfully"
 
-@app.route('/delete/YoungMind/<int:id>', methods=["DELETE"])
-def delete_YoungMind(id):
+#Delete youngmind
+@app.route('/delete/youngmind/<int:id>', methods=["DELETE"])
+def delete_youngmind(id):
     youngmind = YoungMind.query.get(id)
     db.session.delete(youngmind)
+    db.session.commit()
     return f"YoungMind '{youngmind.name}' deleted successfully"
+
+#Update joke
+@app.route('/update/joke/<int:id>', methods=["PUT"])
+def update_joke(id):
+    data = request.json
+    joke = Joke.query.get(id)
+    joke.joke_description = data["joke_description"],
+    joke.joke_category = data["joke_category"]
+    db.session.commit()
+    return f"Joke '{joke.name}'updated successfully"
+
+#Delete Joke
+@app.route('/delete/joke/<int:id>', methods=["DELETE"])
+def delete_joke(id):
+    joke = Joke.query.get(id)
+    db.session.delete(joke)
+    db.session.commit()
+    return f"Joke '{joke.name}' deleted successfully"

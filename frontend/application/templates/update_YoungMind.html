@@ -1,0 +1,18 @@
+{% extends "layout.html"%}
+
+{% block body %}
+<b>Current YoungMind: </b> {{ youngmind.name }}
+<br>
+<hr>
+
+<div class='form'>
+    <form method='POST' action=''>
+        {{ form.hidden_tag() }}
+        {{ form.name.label }} {{ form.name }}
+        {{ form.submit }}
+        <br>
+   
+    </form>
+</div>
+
+{% endblock body %}

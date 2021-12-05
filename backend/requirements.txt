@@ -1,5 +1,9 @@
 flask
-flask-SQLAlchemy
-PyMySQL
+flask_sqlalchemy
+pymysql
+flask_wtf
+flask_testing
+pytest
+pytest-cov
 
 

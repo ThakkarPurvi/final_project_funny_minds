@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<form method="POST">
+    <table>
+        <tr>
+            <td>{{ form.joke_category.label }}</td>
+            <td>{{ form.joke_category }}</td>
+        </tr>
+        <tr>
+            <td>{{ form.joke_description.label }}</td>
+            <td>{{ form.joke_description }}</td>
+        </tr>
+        <tr>
+            <td>{{ form.youngmind.label }}</td>
+            <td>{{ form.youngmind }}</td>
+        </tr>
+    </table>
+    {{ form.submit }}
+    {{ form.hidden_tag() }}
+</form>
+
+{% endblock body %}

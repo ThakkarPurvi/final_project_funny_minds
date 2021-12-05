@@ -1,92 +1,65 @@
+from application import app
+from application.routes import backend_host
 from flask import url_for
 from flask_testing import TestCase
-from application import app, db
-from application.models import Tasks
+import requests_mock
+
+test_data = {
+    "id": 1,
+    "name": "Test YoungMind 1",
+    "jokes": [
+        {
+            "id": 1,
+            "joke_category": "Festive Jokes",
+            "joke_description": "Tring to test jokes",
+            "young_mind_id": 1
+        }
+    ]
+}
 
 class TestBase(TestCase):
 
     def create_app(self):
-        # Defines the flask object's configuration for the unit tests
         app.config.update(
-            SQLALCHEMY_DATABASE_URI='sqlite:///',
             DEBUG=True,
             WTF_CSRF_ENABLED=False
         )
         return app
 
-    def setUp(self):
-        # Will be called before every test
-        db.create_all()
-        db.session.add(Tasks(description="Run unit tests"))
-        db.session.commit()
-
-    def tearDown(self):
-        # Will be called after every test
-        db.session.remove()
-        db.drop_all()
-
 class TestViews(TestBase):
-    # Test whether we get a successful response from our routes
+
     def test_home_get(self):
-        response = self.client.get(url_for('home'))
-        self.assert200(response)
-    
-    def test_create_task_get(self):
-        response = self.client.get(url_for('create_task'))
-        self.assert200(response)
+        with requests_mock.Mocker() as m:
+            m.get(f"http://{backend_host}/get/allyoungminds", json={'youngminds': []})
+            response = self.client.get(url_for('home'))
+            self.assert200(response)
 
-    def test_read_tasks_get(self):
-        response = self.client.get(url_for('read_tasks'))
+    def test_home_create_youngmind(self):
+        response = self.client.get(url_for('create_YoungMind'))
         self.assert200(response)
 
-    def test_update_task_get(self):
-        response = self.client.get(url_for('update_task', id=1))
-        self.assert200(response)
+class TestHome(TestBase):
 
-class TestRead(TestBase):
-
-    def test_read_home_tasks(self):
-        response = self.client.get(url_for('home'))
-        self.assertIn(b"Run unit tests", response.data)
+    def test_home_read_youngminds(self):
+        with requests_mock.Mocker() as m:
+            m.get(f"http://{backend_host}/get/allYoung_Minds", json={'Young_Minds': [test_data]})
+            response = self.client.get(url_for('home'))
+            self.assertIn("Test Young_Mind 1", response.data.decode("utf-8"))
     
-    def test_read_tasks_dictionary(self):
-        response = self.client.get(url_for('read_tasks'))
-        self.assertIn(b"Run unit tests", response.data)
+class TestCreateYoung_Mind(TestBase):
 
-class TestCreate(TestBase):
+    def test_create_Young_Mind_form_post(self):
+        with requests_mock.Mocker() as m:
+            m.post(f"http://{backend_host}/create/youngmind", text="Test response")
+            m.get(f"http://{backend_host}/get/allyoungminds", json={'youngminds': [test_data]})
+            response = self.client.post(url_for('create_youngmind'), follow_redirects=True)
+            self.assertIn("Test YoungMind 1", response.data.decode("utf-8"))
 
-    def test_create_task(self):
-        response = self.client.post(
-            url_for('create_task'),
-            data={"description": "Testing create functionality"},
-            follow_redirects=True
-        )
-        self.assertIn(b"Testing create functionality", response.data)
-    
-class TestUpdate(TestBase):
+class TestCreateJoke(TestBase):
 
-    def test_update_task(self):
-        response = self.client.post(
-            url_for('update_task', id=1),
-            data={"description": "Testing update functionality"},
-            follow_redirects=True
-        )
-        self.assertIn(b"Testing update functionality", response.data)
-    
-    def test_complete_task(self):
-        response = self.client.get(url_for('complete_task', id=1), follow_redirects=True)
-        self.assertEqual(Tasks.query.get(1).completed, True)
-    
-    def test_incomplete_task(self):
-        response = self.client.get(url_for('incomplete_task', id=1), follow_redirects=True)
-        self.assertEqual(Tasks.query.get(1).completed, False)
-        
-
-class TestDelete(TestBase):
-
-    def test_delete_task(self):
-        response = self.client.get(
-            url_for('delete_task', id=1),
-            follow_redirects=True
-        )
-        self.assertNotIn(b"Run unit tests", response.data)
+    def test_create_joke_form_post(self):
+        with requests_mock.Mocker() as m:
+            m.post(f"http://{backend_host}/create/joke/1", text="Test response")
+            m.get(f"http://{backend_host}/get/allyoungminds", json={'youngminds': [test_data]})
+            response = self.client.post(url_for('create_joke'), follow_redirects=True), json={"youngmind": 1, "joke_category": "Test Joke 2"}
+            self.assertIn("Test YoungMind 1", response.data.decode("utf-8"))

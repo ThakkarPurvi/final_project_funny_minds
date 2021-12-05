@@ -1,70 +1,26 @@
 {% extends "layout.html" %}
 {% block body %}
+    {% for youngmind in youngminds %}
+    <table>
+        <h3>ID: {{ youngmind["id"] }}</h3>
+        <h3>Name: {{ youngmind["name"] }}</h3>
+        <br><button type="button" onclick="window.location.href='{{ url_for('update_youngmind', id=youngmind.id) }}';">Update YoungMind </button>&nbsp;
+        <button type="button" onclick="window.location.href='{{ url_for('delete_youngmind', id=youngmind.id) }}';">Delete YoungMind </button><br><br>
+    </table>
+    <h3>Jokes of {{ youngmind["name"] }}</h3>
+    <table>
+        {% for joke in youngmind["jokes"] %}
+        <tr>
+            <td><h3>Category: {{ joke["joke_category"] }}</td></h3>
+        </tr>
+        <tr>
+            <td><h3>Description: {{ joke["joke_description"] }}</td></h3>
+        </tr>
+            <br><button type="button" onclick="window.location.href='{{ url_for('update_joke', id=joke.id) }}';">Update Joke </button>&nbsp;
+            <button type="button" onclick="window.location.href='{{ url_for('delete_joke', id=youngmind.id) }}';">Delete Joke </button><br><br>
+        
+        {% endfor %}
+    </table>
 
-    <h2>Young_Mind</h2>
-    {% for Young_Mind in all_Young_Minds %}
-    {% if Young_Mind["completed"] == False %}
-        <p>
-            Young_Mind ID: {{ Young_Mind["id"] }}<br>
-            Young_Mind Description: {{ Young_Mind["description"] }}<br>
-            <a href="{{ url_for('read_Young_Mind', id=Young_Mind.id) }}">Read</a>
-            <a href="{{ url_for('create_Young_Mind', id=Young_Mind.id) }}">Create</a>
-            <a href="{{ url_for('update_Young_Mind', id=Young_Mind.id) }}">Update</a>
-            <a href="{{ url_for('delete_Young_Mind', id=Young_Mind.id) }}">Delete</a>
-        </p>    
-    {% endif %}
-    {% endfor %}    
-    
-    <h2>Jokes</h2>
-    {% for joke in all_jokes %}
-    {% if joke["completed"] == False %}
-        <p>
-            joke ID: {{ joke["id"] }}<br>
-            joke Description: {{ joke["description"] }}<br>
-            <a href="{{ url_for('create_joke', id=joke) }}">Create</a>
-            <a href="{{ url_for('update_joke', id=joke.id) }}">Update</a>
-            <a href="{{ url_for('update_joke', id=joke.id) }}">Update</a>
-            <a href="{{ url_for('delete_joke', id=joke.id) }}">Delete</a>
-        </p>    
-    {% endif %}
     {% endfor %}
-
 {% endblock body %}
-
-from app import db, categories, jokes
-
-db.drop_all()
-db.create_all() # Creates all table classes defined
-
-categories = [
-    "Knock-Knock",
-    "Summer Jokes",
-    "Sports Jokes",
-    "Festive Jokes",
-    "Birthday Jokes",
-    "Winter Jokes",
-    "Santa Jokes",
-    "Others"
-]
-
-for category in categories:
-    new_category = categories(name = category)
-    db.session.add(new_category)
-    db.session.commit() 
-
-jokes = [
-]
-
-for joke in jokes:
-    new_joke = jokes(name = joke[0], category = categories.query.filter_by(name=joke[1]).first())
-    db.session.add(new_joke)
-    db.session.commit()
-
-all_categories = categories.query.all()
-
-for category in all_categories:
-    print(f"category name: {category.name}")
-    print(f"jokes in {category.name}:")
-    for joke in category.jokes:
-        print(f"- {joke.name}")
-    print()

@@ -1,5 +1,4 @@
-As I was unable to upload photos on the READ me file - I am sharing the link to teh screenshots on the entire project. https://docs.google.com/document/d/1mMheH7c8PvQT3RkesqE6GqPuxRvJE4n07Ycg26CT41Y/edit?usp=sharing
-
+As I was unable to upload photos on the, READ me file. Hence, I am sharing the link to the notes and screenshots of the entire project. https://docs.google.com/document/d/1mMheH7c8PvQT3RkesqE6GqPuxRvJE4n07Ycg26CT41Y/edit?usp=sharing
 
 
 # final_project_youngminds

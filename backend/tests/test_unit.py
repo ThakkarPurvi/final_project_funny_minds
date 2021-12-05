@@ -1,7 +1,21 @@
-from flask import url_for
 from flask_testing import TestCase
 from application import app, db
-from application.models import Tasks
+from flask import url_for
+from application.models import YoungMind
+from application.models import Joke
+
+test_youngmind = {
+                
+                "id": 1,
+                "name": "YoungMind 1",
+                "jokes": []
+                
+            }
+test_joke = {
+                "id": 1,
+                "joke_category": "Joke 1",
+                "joke_description": "Joke 1",
+            }
 
 class TestBase(TestCase):
 
@@ -16,59 +30,50 @@ class TestBase(TestCase):
 
     def setUp(self):
         # Will be called before every test
+        # Create table schema
         db.create_all()
-        db.session.add(Tasks(description="Run unit tests"))
+        db.session.add(YoungMind(youngmind_name="YoungMind 1"))
         db.session.commit()
+
 
     def tearDown(self):
         # Will be called after every test
         db.session.remove()
         db.drop_all()
 
-class TestRead(TestBase):
 
-    def test_read_home_tasks(self):
-        response = self.client.get(url_for('home'))
-        self.assertIn(b"Run unit tests", response.data)
+class TestRead(TestBase):
+    def test_read_all_youngminds(self):
+        response = self.client.get(url_for("read_all_youngminds"))
+        all_youngmind = { "youngminds" : [test_youngmind]}
+        self.assertEquals(all_youngminds, response.json)
+
+    def test_read_youngminds(self):
+        response = self.client.get(url_for("read_youngmind", id = 1))
+        json = {"youngmind_name": "YoungMind 1", "id": 1}
+        self.assertEquals(json, response.json)
+
     
-    def test_read_tasks_dictionary(self):
-        response = self.client.get(url_for('read_tasks'))
-        self.assertIn(b"Run unit tests", response.data)
 
 class TestCreate(TestBase):
-
-    def test_create_task(self):
+    def test_add_youndmind(self):
         response = self.client.post(
-            url_for('create_task'),
-            data={"description": "Testing create functionality"},
+            url_for("add_youngmind"),
+            json ={"youngmind_name": "Testing add functionality"},
             follow_redirects=True
         )
-        self.assertIn(b"Testing create functionality", response.data)
-    
+        self.assertEquals(b"Added New YoungMind: Testing add functionality", response.data)
+       
 class TestUpdate(TestBase):
-
-    def test_update_task(self):
-        response = self.client.post(
-            url_for('update_task', id=1),
-            data={"description": "Testing update functionality"},
-            follow_redirects=True
+    def test_update_youngmind(self):
+        response = self.client.put(
+            url_for("update_youngmind", id=1),
+            json ={"name": "Testing update functionality"}
         )
-        self.assertIn(b"Testing update functionality", response.data)
-    
-    def test_complete_task(self):
-        response = self.client.get(url_for('complete_task', id=1), follow_redirects=True)
-        self.assertEqual(Tasks.query.get(1).completed, True)
-    
-    def test_incomplete_task(self):
-        response = self.client.get(url_for('incomplete_task', id=1), follow_redirects=True)
-        self.assertEqual(Tasks.query.get(1).completed, False)
-        
+        self.assertEquals(b"Updated YoungMind ID: 1 ", response.data)
 
 class TestDelete(TestBase):
-
     def test_delete_task(self):
-        response = self.client.get(
-            url_for('delete_task', id=1),
-            follow_redirects=True
-        )
-        self.assertNotIn(b"Run unit tests", response.data)
+        response = self.client.delete(url_for("delete_youngmind", id=1))
+        self.assertEquals(b"Deleted YoungMind with ID: 1 ", response.data)
+        self.assertIsNone(Country.query.get(1))

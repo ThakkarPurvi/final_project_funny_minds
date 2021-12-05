@@ -1,4 +1,8 @@
-# final_project_funny_minds
+As I was unable to upload photos on the READ me file - I am sharing the link to teh screenshots on the entire project. https://docs.google.com/document/d/1mMheH7c8PvQT3RkesqE6GqPuxRvJE4n07Ycg26CT41Y/edit?usp=sharing
+
+
+
+# final_project_youngminds
 This is my final project for the DevOps Cloud4 Bootcamp called Young Minds
 
 

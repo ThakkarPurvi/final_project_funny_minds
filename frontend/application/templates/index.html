@@ -2,26 +2,23 @@
 {% block body %}
     {% for youngmind in youngminds %}
     <table>
-        <h2>ID: {{ youngmind["id"] }}</h2>
-        <h2>NAME: {{ youngmind["name"] }}</h2>
+        <h3>ID: {{ youngmind["id"] }}</h3>
+        <h3>Name: {{ youngmind["name"] }}</h3>
         <br><button type="button" onclick="window.location.href='{{ url_for('update_youngmind', id=youngmind.id) }}';">Update YoungMind </button>&nbsp;
         <button type="button" onclick="window.location.href='{{ url_for('delete_youngmind', id=youngmind.id) }}';">Delete YoungMind </button><br><br>
-
     </table>
-    
     <h3>Jokes of {{ youngmind["name"] }}</h3>
     <table>
-        <tr>
-            <th>joke_category</th>
-            <th>joke_description</th>
-        </tr>
         {% for joke in youngmind["jokes"] %}
         <tr>
-            <td>Category: {{ joke["joke_category"] }}</td> 
-            <td>Description: {{ joke["joke_description"] }}</td>
+            <td><h3>Category: {{ joke["joke_category"] }}</td></h3>
+        </tr>
+        <tr>
+            <td><h3>Description: {{ joke["joke_description"] }}</td></h3>
+        </tr>
             <br><button type="button" onclick="window.location.href='{{ url_for('update_joke', id=joke.id) }}';">Update Joke </button>&nbsp;
             <button type="button" onclick="window.location.href='{{ url_for('delete_joke', id=youngmind.id) }}';">Delete Joke </button><br><br>
-        </tr>
+        
         {% endfor %}
     </table>
 

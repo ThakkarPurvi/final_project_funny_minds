@@ -9,17 +9,18 @@
 
       <body style="background-color: rgb(173, 240, 199);">
       
-      <h2 style="color:rgb(219, 127, 73)">Why did the kid bring a ladder to school?<br>
-      Because she wanted to go to high school.</h2>
+      <h3 style="color:rgb(53, 71, 235)"><em><hr>Why did the kid bring a ladder to school?<br>
+      Because she wanted to go to high school.</em></h2></hr>
       
-      <h2 style="color:red">What’s an alligator in a vest called?<br>
-      An investi-gator.</h2>
+      <h3 style="color:red"><em>What’s an alligator in a vest called?<br>
+      An investi-gator.</em></h2>
       
-      <h3 style="color:Purple">Wanna share your jokes? Just login and share multiple jokes and earn Dojos.</h3>
+      <h2 style="color:Purple"><em><hr>Wanna share your jokes? Just login and share multiple jokes and earn Dojos.</hr></em></h3>
       
-      <h1>Welcome to Young Minds {{ YoungMinds }}</h1>
+      <h1><hr>Welcome to Young Minds {{ YoungMinds }}</h1></hr>
         <p>
-            <br><button type="button" onclick="window.location.href='{{ url_for('create_youngmind') }}';">Add YoungMind</button>&nbsp;
+            <hr></hr>
+            <br><button type="button" onclick="window.location.href='{{ url_for('create_youngmind') }}';">Add YoungMind</button>
             <button type="button" onclick="window.location.href='{{ url_for('create_joke') }}';">Add Joke</button>
         </p>
         {% block body %}
